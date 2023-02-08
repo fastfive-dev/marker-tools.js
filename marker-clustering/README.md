@@ -10,68 +10,74 @@ NAVER Maps JavaScript API v3를 이용해 마커 클러스터링를 구현한 �
 
 > 예제를 정상적으로 실행하려면 NAVER Maps JavaScript API v3를 이용할 수 있는 `clientId`가 있어야 합니다.
 
-
-
 ## 사용 예제
 
 ```html
 ...
 <head>
-	...
-	<script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?clientId=MK_1sBFRuO6XEvDi29iW"></script>
-	<script type="text/javascript" src="../src/MarkerClustering.js"></script>
-	...
+  ...
+  <script
+    type="text/javascript"
+    src="https://openapi.map.naver.com/openapi/v3/maps.js?clientId=MK_1sBFRuO6XEvDi29iW"
+  ></script>
+  <script type="text/javascript" src="../src/MarkerClustering.js"></script>
+  ...
 </head>
 <body>
-	<div id="map" style="width:100%;height:100%;padding:0;margin:0;"></div>
-	<script>
-		var map = new naver.maps.Map("map", {
-	        zoom: 6,
-	        center: new naver.maps.LatLng(36.2253017, 127.6460516)
-	    });
+  <div id="map" style="width:100%;height:100%;padding:0;margin:0;"></div>
+  <script>
+    var map = new naver.maps.Map('map', {
+      zoom: 6,
+      center: new naver.maps.LatLng(36.2253017, 127.6460516),
+    });
 
-	    var markers = data;	// Array
+    var markers = data; // Array
 
-	    var htmlMarker1 = {
-	            content: '<div style="cursor:pointer;width:40px;height:40px;line-height:42px;font-size:10px;color:white;text-align:center;font-weight:bold;background:url(/example/images/cluster-marker-1.png);background-size:contain;"></div>',
-	            size: N.Size(40, 40),
-	            anchor: N.Point(20, 20)
-	        },
-	        htmlMarker2 = {
-	            content: '<div style="cursor:pointer;width:40px;height:40px;line-height:42px;font-size:10px;color:white;text-align:center;font-weight:bold;background:url(/example/images/cluster-marker-2.png);background-size:contain;"></div>',
-	            size: N.Size(40, 40),
-	            anchor: N.Point(20, 20)
-	        },
-	        htmlMarker3 = {
-	            content: '<div style="cursor:pointer;width:40px;height:40px;line-height:42px;font-size:10px;color:white;text-align:center;font-weight:bold;background:url(/example/images/cluster-marker-3.png);background-size:contain;"></div>',
-	            size: N.Size(40, 40),
-	            anchor: N.Point(20, 20)
-	        },
-	        htmlMarker4 = {
-	            content: '<div style="cursor:pointer;width:40px;height:40px;line-height:42px;font-size:10px;color:white;text-align:center;font-weight:bold;background:url(/example/images/cluster-marker-4.png);background-size:contain;"></div>',
-	            size: N.Size(40, 40),
-	            anchor: N.Point(20, 20)
-	        },
-	        htmlMarker5 = {
-	            content: '<div style="cursor:pointer;width:40px;height:40px;line-height:42px;font-size:10px;color:white;text-align:center;font-weight:bold;background:url(/example/images/cluster-marker-5.png);background-size:contain;"></div>',
-	            size: N.Size(40, 40),
-	            anchor: N.Point(20, 20)
-	        };
+    var htmlMarker1 = {
+        content:
+          '<div style="cursor:pointer;width:40px;height:40px;line-height:42px;font-size:10px;color:white;text-align:center;font-weight:bold;background:url(/example/images/cluster-marker-1.png);background-size:contain;"></div>',
+        size: N.Size(40, 40),
+        anchor: N.Point(20, 20),
+      },
+      htmlMarker2 = {
+        content:
+          '<div style="cursor:pointer;width:40px;height:40px;line-height:42px;font-size:10px;color:white;text-align:center;font-weight:bold;background:url(/example/images/cluster-marker-2.png);background-size:contain;"></div>',
+        size: N.Size(40, 40),
+        anchor: N.Point(20, 20),
+      },
+      htmlMarker3 = {
+        content:
+          '<div style="cursor:pointer;width:40px;height:40px;line-height:42px;font-size:10px;color:white;text-align:center;font-weight:bold;background:url(/example/images/cluster-marker-3.png);background-size:contain;"></div>',
+        size: N.Size(40, 40),
+        anchor: N.Point(20, 20),
+      },
+      htmlMarker4 = {
+        content:
+          '<div style="cursor:pointer;width:40px;height:40px;line-height:42px;font-size:10px;color:white;text-align:center;font-weight:bold;background:url(/example/images/cluster-marker-4.png);background-size:contain;"></div>',
+        size: N.Size(40, 40),
+        anchor: N.Point(20, 20),
+      },
+      htmlMarker5 = {
+        content:
+          '<div style="cursor:pointer;width:40px;height:40px;line-height:42px;font-size:10px;color:white;text-align:center;font-weight:bold;background:url(/example/images/cluster-marker-5.png);background-size:contain;"></div>',
+        size: N.Size(40, 40),
+        anchor: N.Point(20, 20),
+      };
 
-	    var markerClustering = new MarkerClustering({
-	        minClusterSize: 2,
-	        maxZoom: 13,
-	        map: map,
-	        markers: markers,
-	        disableClickZoom: false,
-	        gridSize: 120,
-	        icons: [htmlMarker1, htmlMarker2, htmlMarker3, htmlMarker4, htmlMarker5],
-	        indexGenerator: [10, 100, 200, 500, 1000],
-	        stylingFunction: function(clusterMarker, count) {
-	            $(clusterMarker.getElement()).find('div:first-child').text(count);
-	        }
-	    });
-	</script>
+    var markerClustering = new MarkerClustering({
+      minClusterSize: 2,
+      maxZoom: 13,
+      map: map,
+      markers: markers,
+      disableClickZoom: false,
+      gridSize: 120,
+      icons: [htmlMarker1, htmlMarker2, htmlMarker3, htmlMarker4, htmlMarker5],
+      indexGenerator: [10, 100, 200, 500, 1000],
+      stylingFunction: function (clusterMarker, count) {
+        $(clusterMarker.getElement()).find('div:first-child').text(count);
+      },
+    });
+  </script>
 </body>
 ```
 
