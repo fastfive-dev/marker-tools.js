@@ -1,0 +1,10 @@
+{
+  "name": "marker-tools.js",
+  "version": "0.1.0",
+  "description": "NAVER Maps JavaScript API v3를 이용한 유틸성 마커 예제입니다.",
+  "scripts": {},
+  "repository": "git@github.com:fastfive-dev/marker-tools.js.git",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {}
+}
