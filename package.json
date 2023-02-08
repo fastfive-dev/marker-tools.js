@@ -6,5 +6,7 @@
   "repository": "git@github.com:fastfive-dev/marker-tools.js.git",
   "license": "MIT",
   "dependencies": {},
-  "devDependencies": {}
+  "devDependencies": {
+    "prettier": "2.8.4"
+  }
 }
