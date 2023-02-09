@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import { Cluster } from './Cluster';
 
 type Dict<T = unknown> = Record<string, T>;

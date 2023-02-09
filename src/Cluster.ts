@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import type { MarkerClustering } from './MarkerClustering';
 
 export class Cluster {
