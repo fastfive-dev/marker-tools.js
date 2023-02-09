@@ -5,6 +5,11 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, './dist'),
     filename: 'marker-tools.js',
+    globalObject: 'this',
+    library: {
+      name: 'markerTools',
+      type: 'umd',
+    },
   },
   module: {
     rules: [

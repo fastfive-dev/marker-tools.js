@@ -2,9 +2,17 @@
   "name": "marker-tools.js",
   "version": "0.1.0",
   "description": "NAVER Maps JavaScript API v3를 이용한 유틸성 마커 예제입니다.",
+  "main": "dist/marker-tools.js",
+  "types": "types/index.d.ts",
+  "files": [
+    "dist/",
+    "types/"
+  ],
   "scripts": {
     "dev": "webpack --mode development --watch",
-    "build": "webpack --mode production"
+    "dev:types": "tsc --declaration --emitDeclarationOnly --watch",
+    "build": "webpack --mode production",
+    "build:types": "tsc --declaration --emitDeclarationOnly"
   },
   "repository": "git@github.com:fastfive-dev/marker-tools.js.git",
   "license": "MIT",
