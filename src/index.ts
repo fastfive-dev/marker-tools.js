@@ -2,15 +2,13 @@ export function echo<T extends unknown>(value: T) {
   return value;
 }
 
-type Dict<T = unknown> = Record<string, T>;
-
 let isExtended = false;
 
 /**
  * 마커 클러스터링을 정의합니다.
- * @param options 마커 클러스터링 옵션
+ * @param {Object} options 마커 클러스터링 옵션
  */
-var MarkerClustering = function (options: Dict) {
+var MarkerClustering = function (options) {
   // 기본 값입니다.
   this.DEFAULT_OPTIONS = {
     // 클러스터 마커를 올릴 지도입니다.
@@ -95,9 +93,9 @@ export function extendMarkerClustering() {
 
     /**
      * 마커 클러스터링 옵션을 설정합니다. 설정한 옵션만 반영됩니다.
-     * @param newOptions 옵션
+     * @param {Object | string} newOptions 옵션
      */
-    setOptions: function (newOptions: Dict | string) {
+    setOptions: function (newOptions) {
       var _this = this;
 
       if (typeof newOptions === 'string') {
@@ -108,7 +106,7 @@ export function extendMarkerClustering() {
       } else {
         var isFirst = arguments[1];
 
-        naver.maps.Util.forEach(newOptions, function (value: unknown, key: string) {
+        naver.maps.Util.forEach(newOptions, function (value, key) {
           if (key !== 'map') {
             _this.set(key, value);
           }
@@ -122,17 +120,17 @@ export function extendMarkerClustering() {
 
     /**
      * 마커 클러스터링 옵션을 반환합니다. 특정 옵션 이름을 지정하지 않으면, 모든 옵션을 반환합니다.
-     * @param key 반환받을 옵션 이름
+     * @param {string} key 반환받을 옵션 이름
      * @return {Any} 옵션
      */
-    getOptions: function (key: string) {
+    getOptions: function (key) {
       var _this = this,
         options = {};
 
       if (key !== undefined) {
         return _this.get(key);
       } else {
-        naver.maps.Util.forEach(_this.DEFAULT_OPTIONS, function (value: unknown, key: string) {
+        naver.maps.Util.forEach(_this.DEFAULT_OPTIONS, function (value, key) {
           options[key] = _this.get(key);
         });
 
@@ -150,9 +148,9 @@ export function extendMarkerClustering() {
 
     /**
      * 클러스터를 구성하는 최소 마커 수를 설정합니다.
-     * @param size 클러스터를 구성하는 최소 마커 수
+     * @param {number} size 클러스터를 구성하는 최소 마커 수
      */
-    setMinClusterSize: function (size: number) {
+    setMinClusterSize: function (size) {
       this.setOptions('minClusterSize', size);
     },
 
@@ -166,9 +164,9 @@ export function extendMarkerClustering() {
 
     /**
      * 클러스터 마커를 노출할 최대 줌 레벨을 설정합니다.
-     * @param zoom 클러스터 마커를 노출할 최대 줌 레벨
+     * @param {number} zoom 클러스터 마커를 노출할 최대 줌 레벨
      */
-    setMaxZoom: function (zoom: number) {
+    setMaxZoom: function (zoom) {
       this.setOptions('maxZoom', zoom);
     },
 
@@ -182,9 +180,9 @@ export function extendMarkerClustering() {
 
     /**
      * 클러스터를 구성할 그리드 크기를 설정합니다. 단위는 픽셀입니다.
-     * @param size 클러스터를 구성할 그리드 크기
+     * @param {number} size 클러스터를 구성할 그리드 크기
      */
-    setGridSize: function (size: number) {
+    setGridSize: function (size) {
       this.setOptions('gridSize', size);
     },
 
@@ -198,9 +196,9 @@ export function extendMarkerClustering() {
 
     /**
      * 클러스터 마커의 아이콘을 결정하는 인덱스 생성기를 설정합니다.
-     * @param indexGenerator 인덱스 생성기
+     * @param {Array | Function} indexGenerator 인덱스 생성기
      */
-    setIndexGenerator: function (indexGenerator: unknown[] | Function) {
+    setIndexGenerator: function (indexGenerator) {
       this.setOptions('indexGenerator', indexGenerator);
     },
 
@@ -214,9 +212,9 @@ export function extendMarkerClustering() {
 
     /**
      * 클러스터로 구성할 마커를 설정합니다.
-     * @param markers 클러스터로 구성할 마커
+     * @param {Array.<naver.maps.Marker>} markers 클러스터로 구성할 마커
      */
-    setMarkers: function (markers: Array<naver.maps.Marker>) {
+    setMarkers: function (markers) {
       this.setOptions('markers', markers);
     },
 
@@ -230,11 +228,9 @@ export function extendMarkerClustering() {
 
     /**
      * 클러스터 마커 아이콘을 설정합니다.
-     * @param icons 클러스터 마커 아이콘
+     * @param {Array.<naver.maps.Marker~ImageIcon | naver.maps.Marker~SymbolIcon | naver.maps.Marker~HtmlIcon>} icons 클러스터 마커 아이콘
      */
-    setIcons: function (
-      icons: Array<naver.maps.ImageIcon | naver.maps.SymbolIcon | naver.maps.HtmlIcon>,
-    ) {
+    setIcons: function (icons) {
       this.setOptions('icons', icons);
     },
 
@@ -248,9 +244,9 @@ export function extendMarkerClustering() {
 
     /**
      * 클러스터 마커의 엘리먼트를 조작할 수 있는 스타일링 함수를 설정합니다.
-     * @param func 콜백함수
+     * @param {Function} func 콜백함수
      */
-    setStylingFunction: function (func: Function) {
+    setStylingFunction: function (func) {
       this.setOptions('stylingFunction', func);
     },
 
@@ -264,9 +260,9 @@ export function extendMarkerClustering() {
 
     /**
      * 클러스터 마커를 클릭했을 때 줌 동작 수행 여부를 설정합니다.
-     * @param flag 줌 동작 수행 여부
+     * @param {boolean} flag 줌 동작 수행 여부
      */
-    setDisableClickZoom: function (flag: boolean) {
+    setDisableClickZoom: function (flag) {
       this.setOptions('disableClickZoom', flag);
     },
 
@@ -280,9 +276,9 @@ export function extendMarkerClustering() {
 
     /**
      * 클러스터 마커의 위치를 클러스터를 구성하고 있는 마커의 평균 좌표로 할 것인지 여부를 설정합니다.
-     * @param averageCenter 평균 좌표로 클러스터링 여부
+     * @param {boolean} averageCenter 평균 좌표로 클러스터링 여부
      */
-    setAverageCenter: function (averageCenter: boolean) {
+    setAverageCenter: function (averageCenter) {
       this.setOptions('averageCenter', averageCenter);
     },
 
@@ -402,10 +398,10 @@ export function extendMarkerClustering() {
 
     /**
      * 전달된 위/경도에서 가장 가까운 클러스터를 반환합니다. 없으면 새로 클러스터를 생성해 반환합니다.
-     * @param position 위/경도
+     * @param {naver.maps.LatLng} position 위/경도
      * @return {Cluster} 클러스터
      */
-    _getClosestCluster: function (position: naver.maps.LatLng) {
+    _getClosestCluster: function (position) {
       var proj = this.getProjection(),
         clusters = this._clusters,
         closestCluster = null,
@@ -453,9 +449,9 @@ export function extendMarkerClustering() {
 
     /**
      * 클러스터에 마커를 추가합니다.
-     * @param marker 클러스터에 추가할 마커
+     * @param {naver.maps.Marker} marker 클러스터에 추가할 마커
      */
-    addMarker: function (marker: naver.maps.Marker) {
+    addMarker: function (marker) {
       if (this._isMember(marker)) return;
 
       if (!this._clusterCenter) {
@@ -524,10 +520,10 @@ export function extendMarkerClustering() {
 
     /**
      * 전달된 위/경도가 클러스터 경계 영역 내에 있는지 여부를 반환합니다.
-     * @param latlng 위/경도
+     * @param {naver.maps.LatLng} latlng 위/경도
      * @return {boolean} 클러스터 경계 영역 내의 위치 여부
      */
-    isInBounds: function (latlng: naver.maps.LatLng) {
+    isInBounds: function (latlng) {
       return this._clusterBounds && this._clusterBounds.hasLatLng(latlng);
     },
 
@@ -671,11 +667,11 @@ export function extendMarkerClustering() {
 
     /**
      * 전달된 위/경도를 중심으로 그리드 크기만큼 확장한 클러스터 경계 영역을 반환합니다.
-     * @param position 위/경도
+     * @param {naver.maps.LatLng} position 위/경도
      * @return {naver.maps.LatLngBounds} 클러스터 경계 영역
      * @private
      */
-    _calcBounds: function (position: naver.maps.LatLng) {
+    _calcBounds: function (position) {
       var map = this._markerClusterer.getMap(),
         bounds = new naver.maps.LatLngBounds(position.clone(), position.clone()),
         mapBounds = map.getBounds(),
@@ -701,11 +697,11 @@ export function extendMarkerClustering() {
 
     /**
      * 클러스터를 구성하는 마커 수에 따라 노출할 아이콘을 결정하기 위한 인덱스를 반환합니다.
-     * @param count 클러스터를 구성하는 마커 수
+     * @param {number} count 클러스터를 구성하는 마커 수
      * @return {number} 인덱스
      * @private
      */
-    _getIndex: function (count: number) {
+    _getIndex: function (count) {
       var indexGenerator = this._markerClusterer.getIndexGenerator();
 
       if (naver.maps.Util.isFunction(indexGenerator)) {
@@ -727,21 +723,21 @@ export function extendMarkerClustering() {
 
     /**
      * 전달된 마커가 이미 클러스터에 속해 있는지 여부를 반환합니다.
-     * @param marker 마커
+     * @param {naver.maps.Marker} marker 마커
      * @return {boolean} 클러스터에 속해 있는지 여부
      * @private
      */
-    _isMember: function (marker: naver.maps.Marker) {
+    _isMember: function (marker) {
       return this._clusterMember.indexOf(marker) !== -1;
     },
 
     /**
      * 전달된 마커들의 중심 좌표를 반환합니다.
-     * @param markers 마커 배열
+     * @param {Array.<naver.maps.Marker>} markers 마커 배열
      * @return {naver.maps.Point} 마커들의 중심 좌표
      * @private
      */
-    _calcAverageCenter: function (markers: Array<naver.maps.Marker>) {
+    _calcAverageCenter: function (markers) {
       var numberOfMarkers = markers.length;
       var averageCenter = [0, 0];
 
