@@ -9,16 +9,18 @@
     "types/"
   ],
   "scripts": {
-    "dev": "webpack --mode development --watch",
-    "dev:types": "tsc --declaration --emitDeclarationOnly --watch",
-    "build": "webpack --mode production",
-    "build:types": "tsc --declaration --emitDeclarationOnly"
+    "dev": "concurrently \"yarn dev:js\" \"yarn dev:types\"",
+    "dev:js": "webpack --mode development -w",
+    "dev:types": "tsc -d --emitDeclarationOnly -w",
+    "build": "yarn build:types && webpack --mode production",
+    "build:types": "tsc -d --emitDeclarationOnly"
   },
   "repository": "git@github.com:fastfive-dev/marker-tools.js.git",
   "license": "MIT",
   "dependencies": {},
   "devDependencies": {
     "@tsconfig/node16": "^1.0.3",
+    "concurrently": "^7.6.0",
     "prettier": "2.8.4",
     "ts-loader": "^9.4.2",
     "typescript": "^4.9.5",
