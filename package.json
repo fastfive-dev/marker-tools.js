@@ -1,6 +1,6 @@
 {
   "name": "marker-tools.js",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "NAVER Maps JavaScript API v3를 이용한 유틸성 마커 예제입니다.",
   "main": "dist/marker-tools.js",
   "types": "types/index.d.ts",
