@@ -1,0 +1,1 @@
+!function(e,o){"object"==typeof exports&&"object"==typeof module?module.exports=o():"function"==typeof define&&define.amd?define([],o):"object"==typeof exports?exports.markerTools=o():e.markerTools=o()}(this,(()=>(()=>{"use strict";var e={};return(()=>{var o=e;Object.defineProperty(o,"__esModule",{value:!0}),o.echo=void 0,o.echo=function(e){return e}})(),e})()));
