@@ -3,6 +3,8 @@
 import type { MarkerClustering } from './MarkerClustering';
 
 export class Cluster {
+  $naver: typeof naver;
+
   _clusterCenter: naver.maps.LatLng | null;
 
   _clusterBounds: naver.maps.LatLngBounds | null;
@@ -20,6 +22,8 @@ export class Cluster {
    * @param markerClusterer
    */
   constructor(markerClusterer: MarkerClustering) {
+    this.$naver = markerClusterer.$naver;
+
     this._clusterCenter = null;
     this._clusterBounds = null;
     this._clusterMarker = null;
@@ -51,7 +55,7 @@ export class Cluster {
    * 클러스터를 제거합니다.
    */
   destroy() {
-    naver.maps.Event.removeListener(this._relation);
+    this.$naver.maps.Event.removeListener(this._relation);
 
     const members = this._clusterMember;
 
@@ -118,10 +122,10 @@ export class Cluster {
 
     const map = this._markerClusterer.getMap();
 
-    this._relation = naver.maps.Event.addListener(
+    this._relation = this.$naver.maps.Event.addListener(
       this._clusterMarker,
       'click',
-      naver.maps.Util.bind((e) => {
+      this.$naver.maps.Util.bind((e) => {
         map.morph(e.coord, map.getZoom() + 1);
       }, this),
     );
@@ -133,7 +137,7 @@ export class Cluster {
   disableClickZoom(): void {
     if (!this._relation) return;
 
-    naver.maps.Event.removeListener(this._relation);
+    this.$naver.maps.Event.removeListener(this._relation);
     this._relation = null;
   }
 
@@ -153,7 +157,7 @@ export class Cluster {
         position = this._clusterCenter;
       }
 
-      this._clusterMarker = new naver.maps.Marker({
+      this._clusterMarker = new this.$naver.maps.Marker({
         position,
         map: this._markerClusterer.getMap(),
       });
@@ -258,7 +262,7 @@ export class Cluster {
    */
   _calcBounds(position: naver.maps.LatLng): naver.maps.LatLngBounds {
     const map = this._markerClusterer.getMap();
-    const bounds = new naver.maps.LatLngBounds(position.clone(), position.clone());
+    const bounds = new this.$naver.maps.LatLngBounds(position.clone(), position.clone());
     const mapBounds = map.getBounds();
     const proj = map.getProjection();
     const map_max_px = proj.fromCoordToOffset(mapBounds.getNE());
@@ -274,10 +278,10 @@ export class Cluster {
     const max_px_y = Math.max(map_max_px.y, max_px.y);
     const min_px_x = Math.max(map_min_px.x, min_px.x);
     const min_px_y = Math.min(map_min_px.y, min_px.y);
-    const newMax = proj.fromOffsetToCoord(new naver.maps.Point(max_px_x, max_px_y));
-    const newMin = proj.fromOffsetToCoord(new naver.maps.Point(min_px_x, min_px_y));
+    const newMax = proj.fromOffsetToCoord(new this.$naver.maps.Point(max_px_x, max_px_y));
+    const newMin = proj.fromOffsetToCoord(new this.$naver.maps.Point(min_px_x, min_px_y));
 
-    return new naver.maps.LatLngBounds(newMin, newMax);
+    return new this.$naver.maps.LatLngBounds(newMin, newMax);
   }
 
   /**
@@ -289,11 +293,11 @@ export class Cluster {
   _getIndex(count: number): number {
     const indexGenerator = this._markerClusterer.getIndexGenerator();
 
-    if (naver.maps.Util.isFunction(indexGenerator)) {
+    if (this.$naver.maps.Util.isFunction(indexGenerator)) {
       return indexGenerator(count);
     }
 
-    if (naver.maps.Util.isArray(indexGenerator)) {
+    if (this.$naver.maps.Util.isArray(indexGenerator)) {
       let index = 0;
 
       for (let i = index, ii = indexGenerator.length; i < ii; i += 1) {
@@ -336,6 +340,6 @@ export class Cluster {
     averageCenter[0] /= numberOfMarkers;
     averageCenter[1] /= numberOfMarkers;
 
-    return new naver.maps.Point(averageCenter[0], averageCenter[1]);
+    return new this.$naver.maps.Point(averageCenter[0], averageCenter[1]);
   }
 }

@@ -5,6 +5,8 @@ import { Cluster } from './Cluster';
 type Dict<T = unknown> = Record<string, T>;
 
 export class MarkerClustering extends naver.maps.OverlayView {
+  $naver: typeof naver;
+
   DEFAULT_OPTIONS: Dict;
 
   _clusters: Cluster[];
@@ -15,10 +17,13 @@ export class MarkerClustering extends naver.maps.OverlayView {
 
   /**
    * 마커 클러스터링을 정의합니다.
+   * @param $naver NAVER 지도 API 전역 변수
    * @param options 마커 클러스터링 옵션
    */
-  constructor(options: Dict) {
+  constructor($naver: typeof naver, options: Dict) {
     super();
+
+    this.$naver = $naver;
 
     // 기본 값입니다.
     this.DEFAULT_OPTIONS = {
@@ -49,17 +54,17 @@ export class MarkerClustering extends naver.maps.OverlayView {
     this._mapRelations = null;
     this._markerRelations = [];
 
-    this.setOptions(naver.maps.Util.extend({}, this.DEFAULT_OPTIONS, options), true);
+    this.setOptions(this.$naver.maps.Util.extend({}, this.DEFAULT_OPTIONS, options), true);
     this.setMap(options.map || null);
   }
 
   onAdd(): void {
     const map = this.getMap();
 
-    this._mapRelations = naver.maps.Event.addListener(
+    this._mapRelations = this.$naver.maps.Event.addListener(
       map,
       'idle',
-      naver.maps.Util.bind(this._onIdle, this),
+      this.$naver.maps.Util.bind(this._onIdle, this),
     );
 
     if (this.getMarkers().length > 0) {
@@ -73,7 +78,7 @@ export class MarkerClustering extends naver.maps.OverlayView {
   }
 
   onRemove(): void {
-    naver.maps.Event.removeListener(this._mapRelation);
+    this.$naver.maps.Event.removeListener(this._mapRelation);
 
     this._clearClusters();
 
@@ -96,7 +101,7 @@ export class MarkerClustering extends naver.maps.OverlayView {
     } else {
       const isFirst = arguments[1];
 
-      naver.maps.Util.forEach(newOptions, (value, key) => {
+      this.$naver.maps.Util.forEach(newOptions, (value, key) => {
         if (key !== 'map') {
           _this.set(key, value);
         }
@@ -121,7 +126,7 @@ export class MarkerClustering extends naver.maps.OverlayView {
       return _this.get(key);
     }
 
-    naver.maps.Util.forEach(_this.DEFAULT_OPTIONS, (value, key) => {
+    this.$naver.maps.Util.forEach(_this.DEFAULT_OPTIONS, (value, key) => {
       options[key] = _this.get(key);
     });
 
@@ -340,10 +345,10 @@ export class MarkerClustering extends naver.maps.OverlayView {
       closestCluster.addMarker(marker);
 
       this._markerRelations.push(
-        naver.maps.Event.addListener(
+        this.$naver.maps.Event.addListener(
           marker,
           'dragend',
-          naver.maps.Util.bind(this._onDragEnd, this),
+          this.$naver.maps.Util.bind(this._onDragEnd, this),
         ),
       );
     }
@@ -372,7 +377,7 @@ export class MarkerClustering extends naver.maps.OverlayView {
       clusters[i].destroy();
     }
 
-    naver.maps.Event.removeListener(this._markerRelations);
+    this.$naver.maps.Event.removeListener(this._markerRelations);
 
     this._markerRelations = [];
     this._clusters = [];
