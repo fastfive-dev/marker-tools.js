@@ -1,4 +1,5 @@
 // @ts-nocheck
+/* eslint-disable no-underscore-dangle, @typescript-eslint/naming-convention */
 
 import type { MarkerClustering } from './MarkerClustering';
 
@@ -293,11 +294,7 @@ export class Cluster {
   _getIndex(count: number): number {
     const indexGenerator = this._markerClusterer.getIndexGenerator();
 
-    if (this.$naver.maps.Util.isFunction(indexGenerator)) {
-      return indexGenerator(count);
-    }
-
-    if (this.$naver.maps.Util.isArray(indexGenerator)) {
+    if (Array.isArray(indexGenerator)) {
       let index = 0;
 
       for (let i = index, ii = indexGenerator.length; i < ii; i += 1) {
@@ -310,6 +307,8 @@ export class Cluster {
 
       return index;
     }
+
+    return indexGenerator(count);
   }
 
   /**
@@ -328,6 +327,7 @@ export class Cluster {
    * @return 마커들의 중심 좌표
    * @private
    */
+  // eslint-disable-next-line class-methods-use-this
   _calcAverageCenter(markers: Array<naver.maps.Marker>): naver.maps.Point {
     const numberOfMarkers = markers.length;
     const averageCenter = [0, 0];

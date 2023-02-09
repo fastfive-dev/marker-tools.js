@@ -1,4 +1,5 @@
 // @ts-nocheck
+/* eslint-disable no-underscore-dangle, @typescript-eslint/naming-convention */
 
 import { Cluster } from './Cluster';
 
@@ -73,6 +74,7 @@ export class MarkerClustering extends naver.maps.OverlayView {
     }
   }
 
+  // eslint-disable-next-line class-methods-use-this
   draw(): void {
     // noop
   }
@@ -90,16 +92,16 @@ export class MarkerClustering extends naver.maps.OverlayView {
    * 마커 클러스터링 옵션을 설정합니다. 설정한 옵션만 반영됩니다.
    * @param newOptions 옵션
    */
-  setOptions(newOptions: Dict | string): void {
+  setOptions(newOptions: Dict | string, arg: unknown): void {
     const _this = this;
 
     if (typeof newOptions === 'string') {
       const key = newOptions;
-      const value = arguments[1];
+      const value = arg;
 
       _this.set(key, value);
     } else {
-      const isFirst = arguments[1];
+      const isFirst = arg;
 
       this.$naver.maps.Util.forEach(newOptions, (value, key) => {
         if (key !== 'map') {
@@ -126,8 +128,8 @@ export class MarkerClustering extends naver.maps.OverlayView {
       return _this.get(key);
     }
 
-    this.$naver.maps.Util.forEach(_this.DEFAULT_OPTIONS, (value, key) => {
-      options[key] = _this.get(key);
+    this.$naver.maps.Util.forEach(_this.DEFAULT_OPTIONS, (v, k) => {
+      options[k] = _this.get(k);
     });
 
     return options;
@@ -185,7 +187,7 @@ export class MarkerClustering extends naver.maps.OverlayView {
    * 클러스터 마커의 아이콘을 결정하는 인덱스 생성기를 반환합니다.
    * @return 인덱스 생성기
    */
-  getIndexGenerator(): unknown[] | Function {
+  getIndexGenerator(): number[] | ((count: number) => number) {
     return this.getOptions('indexGenerator');
   }
 
@@ -307,14 +309,8 @@ export class MarkerClustering extends naver.maps.OverlayView {
         });
         break;
       case 'disableClickZoom':
-        let exec = 'enableClickZoom';
-
-        if (value) {
-          exec = 'disableClickZoom';
-        }
-
         this._clusters.forEach((cluster) => {
-          cluster[exec]();
+          cluster[value ? 'disableClickZoom' : 'enableClickZoom']();
         });
         break;
       default:
@@ -338,19 +334,19 @@ export class MarkerClustering extends naver.maps.OverlayView {
       const marker = markers[i];
       const position = marker.getPosition();
 
-      if (!bounds.hasLatLng(position)) continue;
+      if (bounds.hasLatLng(position)) {
+        const closestCluster = this._getClosestCluster(position);
 
-      const closestCluster = this._getClosestCluster(position);
+        closestCluster.addMarker(marker);
 
-      closestCluster.addMarker(marker);
-
-      this._markerRelations.push(
-        this.$naver.maps.Event.addListener(
-          marker,
-          'dragend',
-          this.$naver.maps.Util.bind(this._onDragEnd, this),
-        ),
-      );
+        this._markerRelations.push(
+          this.$naver.maps.Event.addListener(
+            marker,
+            'dragend',
+            this.$naver.maps.Util.bind(this._onDragEnd, this),
+          ),
+        );
+      }
     }
   }
 
