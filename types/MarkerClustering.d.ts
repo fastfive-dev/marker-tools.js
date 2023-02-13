@@ -1,24 +1,44 @@
 /// <reference types="navermaps" />
 import { Cluster } from './Cluster';
-type Dict<T = unknown> = Record<string, T>;
+type MarkerClusteringOptions = {
+    map?: naver.maps.Map | null;
+    markers?: unknown[];
+    disableClickZoom?: boolean;
+    minClusterSize?: number;
+    maxZoom?: number;
+    gridSize?: number;
+    icons?: unknown[];
+    indexGenerator?: unknown[];
+    averageCenter?: boolean;
+    stylingFunction?: Function;
+};
 export declare class MarkerClustering extends naver.maps.OverlayView {
-    DEFAULT_OPTIONS: Dict;
+    $naver: typeof naver;
+    DEFAULT_OPTIONS: MarkerClusteringOptions;
     _clusters: Cluster[];
     _mapRelations: naver.maps.MapEventListener | null;
     _markerRelations: Array<naver.maps.MapEventListener>;
     /**
      * 마커 클러스터링을 정의합니다.
+     * @param $naver NAVER 지도 API 전역 변수
      * @param options 마커 클러스터링 옵션
      */
-    constructor(options: Dict);
+    constructor($naver: typeof naver, options: MarkerClusteringOptions);
     onAdd(): void;
     draw(): void;
     onRemove(): void;
     /**
      * 마커 클러스터링 옵션을 설정합니다. 설정한 옵션만 반영됩니다.
-     * @param newOptions 옵션
+     * @param newOptions 옵션 이름
+     * @param arg 옵션 값
      */
-    setOptions(newOptions: Dict | string): void;
+    setOptions(newOptions: string, arg: unknown): void;
+    /**
+     * 마커 클러스터링 옵션을 설정합니다. 설정한 옵션만 반영됩니다.
+     * @param newOptions 옵션
+     * @param arg 최초 설정인지 여부
+     */
+    setOptions(newOptions: MarkerClusteringOptions, arg: boolean): void;
     /**
      * 마커 클러스터링 옵션을 반환합니다. 특정 옵션 이름을 지정하지 않으면, 모든 옵션을 반환합니다.
      * @param key 반환받을 옵션 이름
@@ -59,7 +79,7 @@ export declare class MarkerClustering extends naver.maps.OverlayView {
      * 클러스터 마커의 아이콘을 결정하는 인덱스 생성기를 반환합니다.
      * @return 인덱스 생성기
      */
-    getIndexGenerator(): unknown[] | Function;
+    getIndexGenerator(): number[] | ((count: number) => number);
     /**
      * 클러스터 마커의 아이콘을 결정하는 인덱스 생성기를 설정합니다.
      * @param indexGenerator 인덱스 생성기

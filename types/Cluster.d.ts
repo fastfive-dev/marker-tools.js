@@ -1,6 +1,7 @@
 /// <reference types="navermaps" />
 import type { MarkerClustering } from './MarkerClustering';
 export declare class Cluster {
+    $naver: typeof naver;
     _clusterCenter: naver.maps.LatLng | null;
     _clusterBounds: naver.maps.LatLngBounds | null;
     _clusterMarker: naver.maps.Marker | null;
