@@ -3,17 +3,19 @@
 
 import { Cluster } from './Cluster';
 
+type MarkerStylingFunction = (clusterMarker: naver.maps.Marker | null, count: number) => void;
+
 type MarkerClusteringOptions = {
   map?: naver.maps.Map | null;
-  markers?: unknown[];
+  markers?: Array<naver.maps.Marker>;
   disableClickZoom?: boolean;
   minClusterSize?: number;
   maxZoom?: number;
   gridSize?: number;
-  icons?: unknown[];
-  indexGenerator?: unknown[];
+  icons?: Array<naver.maps.ImageIcon | naver.maps.SymbolIcon | naver.maps.HtmlIcon>;
+  indexGenerator?: number[] | ((count: number) => number);
   averageCenter?: boolean;
-  stylingFunction?: Function;
+  stylingFunction?: MarkerStylingFunction;
 };
 
 export class MarkerClusteringWrapper {
@@ -221,7 +223,7 @@ export class MarkerClusteringWrapper {
        * 클러스터 마커의 아이콘을 결정하는 인덱스 생성기를 설정합니다.
        * @param indexGenerator 인덱스 생성기
        */
-      setIndexGenerator(indexGenerator: unknown[] | Function): void {
+      setIndexGenerator(indexGenerator: number[] | ((count: number) => number)): void {
         this.setOptions('indexGenerator', indexGenerator);
       }
 
@@ -263,7 +265,7 @@ export class MarkerClusteringWrapper {
        * 클러스터 마커의 엘리먼트를 조작할 수 있는 스타일링 함수를 반환합니다.
        * @return 콜백함수
        */
-      getStylingFunction(): Function {
+      getStylingFunction(): MarkerStylingFunction {
         return this.getOptions('stylingFunction');
       }
 
@@ -271,7 +273,7 @@ export class MarkerClusteringWrapper {
        * 클러스터 마커의 엘리먼트를 조작할 수 있는 스타일링 함수를 설정합니다.
        * @param func 콜백함수
        */
-      setStylingFunction(func: Function): void {
+      setStylingFunction(func: MarkerStylingFunction): void {
         this.setOptions('stylingFunction', func);
       }
 
