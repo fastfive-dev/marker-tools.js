@@ -55,18 +55,16 @@ export class MarkerClustering extends naver.maps.OverlayView {
     this._mapRelations = null;
     this._markerRelations = [];
 
-    this.setOptions(this.$naver.maps.Util.extend({}, this.DEFAULT_OPTIONS, options), true);
+    this.setOptions({ ...this.DEFAULT_OPTIONS, ...options }, true);
     this.setMap(options.map || null);
   }
 
   onAdd(): void {
     const map = this.getMap();
 
-    this._mapRelations = this.$naver.maps.Event.addListener(
-      map,
-      'idle',
-      this.$naver.maps.Util.bind(this._onIdle, this),
-    );
+    this._mapRelations = this.$naver.maps.Event.addListener(map, 'idle', () => {
+      this._onIdle();
+    });
 
     if (this.getMarkers().length > 0) {
       this._createClusters();
@@ -103,7 +101,7 @@ export class MarkerClustering extends naver.maps.OverlayView {
     } else {
       const isFirst = arg;
 
-      this.$naver.maps.Util.forEach(newOptions, (value, key) => {
+      Object.entries(newOptions).forEach(([key, value]) => {
         if (key !== 'map') {
           _this.set(key, value);
         }
@@ -128,7 +126,7 @@ export class MarkerClustering extends naver.maps.OverlayView {
       return _this.get(key);
     }
 
-    this.$naver.maps.Util.forEach(_this.DEFAULT_OPTIONS, (v, k) => {
+    Object.entries(_this.DEFAULT_OPTIONS).forEach(([k, v]) => {
       options[k] = _this.get(k);
     });
 
@@ -340,11 +338,9 @@ export class MarkerClustering extends naver.maps.OverlayView {
         closestCluster.addMarker(marker);
 
         this._markerRelations.push(
-          this.$naver.maps.Event.addListener(
-            marker,
-            'dragend',
-            this.$naver.maps.Util.bind(this._onDragEnd, this),
-          ),
+          this.$naver.maps.Event.addListener(marker, 'dragend', () => {
+            this._onDragEnd();
+          }),
         );
       }
     }

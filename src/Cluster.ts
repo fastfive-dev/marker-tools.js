@@ -123,13 +123,9 @@ export class Cluster {
 
     const map = this._markerClusterer.getMap();
 
-    this._relation = this.$naver.maps.Event.addListener(
-      this._clusterMarker,
-      'click',
-      this.$naver.maps.Util.bind((e) => {
-        map.morph(e.coord, map.getZoom() + 1);
-      }, this),
-    );
+    this._relation = this.$naver.maps.Event.addListener(this._clusterMarker, 'click', (e) => {
+      map.morph(e.coord, map.getZoom() + 1);
+    });
   }
 
   /**
