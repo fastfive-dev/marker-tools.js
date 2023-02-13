@@ -1,5 +1,5 @@
 /// <reference types="navermaps" />
-import type { MarkerClustering } from './MarkerClustering';
+import type { MarkerClusteringWrapper } from './MarkerClusteringWrapper';
 export declare class Cluster {
     $naver: typeof naver;
     _clusterCenter: naver.maps.LatLng | null;
@@ -7,12 +7,12 @@ export declare class Cluster {
     _clusterMarker: naver.maps.Marker | null;
     _relation: naver.maps.MapEventListener | null;
     _clusterMember: Array<naver.maps.Marker>;
-    _markerClusterer: MarkerClustering;
+    _markerClusterer: MarkerClusteringWrapper['markerClustering'];
     /**
      * 마커를 가지고 있는 클러스터를 정의합니다.
      * @param markerClusterer
      */
-    constructor(markerClusterer: MarkerClustering);
+    constructor(markerClusterer: MarkerClusteringWrapper['markerClustering']);
     /**
      * 클러스터에 마커를 추가합니다.
      * @param marker 클러스터에 추가할 마커
