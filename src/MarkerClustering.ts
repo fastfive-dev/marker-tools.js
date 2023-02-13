@@ -3,12 +3,23 @@
 
 import { Cluster } from './Cluster';
 
-type Dict<T = unknown> = Record<string, T>;
+type MarkerClusteringOptions = {
+  map?: naver.maps.Map | null;
+  markers?: unknown[];
+  disableClickZoom?: boolean;
+  minClusterSize?: number;
+  maxZoom?: number;
+  gridSize?: number;
+  icons?: unknown[];
+  indexGenerator?: unknown[];
+  averageCenter?: boolean;
+  stylingFunction?: Function;
+};
 
 export class MarkerClustering extends naver.maps.OverlayView {
   $naver: typeof naver;
 
-  DEFAULT_OPTIONS: Dict;
+  DEFAULT_OPTIONS: MarkerClusteringOptions;
 
   _clusters: Cluster[];
 
@@ -21,7 +32,7 @@ export class MarkerClustering extends naver.maps.OverlayView {
    * @param $naver NAVER 지도 API 전역 변수
    * @param options 마커 클러스터링 옵션
    */
-  constructor($naver: typeof naver, options: Dict) {
+  constructor($naver: typeof naver, options: MarkerClusteringOptions) {
     super();
 
     this.$naver = $naver;
@@ -88,10 +99,18 @@ export class MarkerClustering extends naver.maps.OverlayView {
 
   /**
    * 마커 클러스터링 옵션을 설정합니다. 설정한 옵션만 반영됩니다.
-   * @param newOptions 옵션
+   * @param newOptions 옵션 이름
+   * @param arg 옵션 값
    */
-  setOptions(newOptions: Dict | string, arg: unknown): void {
-    const _this = this;
+  setOptions(newOptions: string, arg: unknown): void;
+  /**
+   * 마커 클러스터링 옵션을 설정합니다. 설정한 옵션만 반영됩니다.
+   * @param newOptions 옵션
+   * @param arg 최초 설정인지 여부
+   */
+  setOptions(newOptions: MarkerClusteringOptions, arg: boolean): void;
+  setOptions(newOptions: string | MarkerClusteringOptions, arg: unknown): void {
+    const _this: MarkerClustering = this;
 
     if (typeof newOptions === 'string') {
       const key = newOptions;
@@ -119,8 +138,8 @@ export class MarkerClustering extends naver.maps.OverlayView {
    * @return 옵션
    */
   getOptions(key: string): any {
-    const _this = this;
-    const options = {};
+    const _this: MarkerClustering = this;
+    const options: MarkerClusteringOptions = {};
 
     if (key !== undefined) {
       return _this.get(key);
@@ -393,7 +412,7 @@ export class MarkerClustering extends naver.maps.OverlayView {
   _getClosestCluster(position: naver.maps.LatLng): Cluster {
     const proj = this.getProjection();
     const clusters = this._clusters;
-    let closestCluster = null;
+    let closestCluster: Cluster | null = null;
     let distance = Infinity;
 
     for (let i = 0, ii = clusters.length; i < ii; i += 1) {

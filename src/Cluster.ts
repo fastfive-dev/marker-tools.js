@@ -146,7 +146,7 @@ export class Cluster {
    */
   updateCluster(): void {
     if (!this._clusterMarker) {
-      let position;
+      let position: unknown;
 
       if (this._markerClusterer.getAverageCenter()) {
         position = this._calcAverageCenter(this._clusterMember);
@@ -326,7 +326,7 @@ export class Cluster {
   // eslint-disable-next-line class-methods-use-this
   _calcAverageCenter(markers: Array<naver.maps.Marker>): naver.maps.Point {
     const numberOfMarkers = markers.length;
-    const averageCenter = [0, 0];
+    const averageCenter: [number, number] = [0, 0];
 
     for (let i = 0; i < numberOfMarkers; i += 1) {
       averageCenter[0] += markers[i].position.x;
