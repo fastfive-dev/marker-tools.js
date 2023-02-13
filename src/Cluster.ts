@@ -1,7 +1,7 @@
 // @ts-nocheck
 /* eslint-disable no-underscore-dangle, @typescript-eslint/naming-convention */
 
-import type { MarkerClustering } from './MarkerClustering';
+import type { MarkerClusteringWrapper } from './MarkerClusteringWrapper';
 
 export class Cluster {
   $naver: typeof naver;
@@ -16,13 +16,13 @@ export class Cluster {
 
   _clusterMember: Array<naver.maps.Marker>;
 
-  _markerClusterer: MarkerClustering;
+  _markerClusterer: MarkerClusteringWrapper['markerClustering'];
 
   /**
    * 마커를 가지고 있는 클러스터를 정의합니다.
    * @param markerClusterer
    */
-  constructor(markerClusterer: MarkerClustering) {
+  constructor(markerClusterer: MarkerClusteringWrapper['markerClustering']) {
     this.$naver = markerClusterer.$naver;
 
     this._clusterCenter = null;
