@@ -1,5 +1,6 @@
 /// <reference types="navermaps" />
 import { Cluster } from './Cluster';
+type MarkerIndexGenerator = number[] | ((count: number) => number);
 type MarkerStylingFunction = (clusterMarker: naver.maps.Marker | null, count: number) => void;
 type MarkerClusteringOptions = {
     map?: naver.maps.Map | null;
@@ -9,7 +10,7 @@ type MarkerClusteringOptions = {
     maxZoom?: number;
     gridSize?: number;
     icons?: Array<naver.maps.ImageIcon | naver.maps.SymbolIcon | naver.maps.HtmlIcon>;
-    indexGenerator?: number[] | ((count: number) => number);
+    indexGenerator?: MarkerIndexGenerator;
     averageCenter?: boolean;
     stylingFunction?: MarkerStylingFunction;
 };
@@ -17,9 +18,9 @@ export declare class MarkerClusteringWrapper {
     markerClustering: {
         $naver: typeof naver;
         DEFAULT_OPTIONS: MarkerClusteringOptions;
-        _clusters: Cluster[];
-        _mapRelations: naver.maps.MapEventListener | null;
-        _markerRelations: Array<naver.maps.MapEventListener>;
+        "__#1@#clusters": Cluster[];
+        "__#1@#mapRelations": naver.maps.MapEventListener | null;
+        "__#1@#markerRelations": Array<naver.maps.MapEventListener>;
         onAdd(): void;
         draw(): void;
         onRemove(): void;
@@ -75,12 +76,12 @@ export declare class MarkerClusteringWrapper {
          * 클러스터 마커의 아이콘을 결정하는 인덱스 생성기를 반환합니다.
          * @return 인덱스 생성기
          */
-        getIndexGenerator(): number[] | ((count: number) => number);
+        getIndexGenerator(): MarkerIndexGenerator;
         /**
          * 클러스터 마커의 아이콘을 결정하는 인덱스 생성기를 설정합니다.
          * @param indexGenerator 인덱스 생성기
          */
-        setIndexGenerator(indexGenerator: number[] | ((count: number) => number)): void;
+        setIndexGenerator(indexGenerator: MarkerIndexGenerator): void;
         /**
          * 클러스터로 구성할 마커를 반환합니다.
          * @return 클러스터로 구성할 마커
@@ -131,41 +132,41 @@ export declare class MarkerClusteringWrapper {
          * @param averageCenter 평균 좌표로 클러스터링 여부
          */
         setAverageCenter(averageCenter: boolean): void;
-        changed(key: any, value: any): void;
+        changed(key: string, value: unknown): void;
         /**
          * 현재 지도 경계 영역 내의 마커에 대해 클러스터를 생성합니다.
          * @private
          */
-        _createClusters(): void;
+        "__#1@#createClusters"(): void;
         /**
          * 클러스터의 아이콘, 텍스트를 갱신합니다.
          * @private
          */
-        _updateClusters(): void;
+        "__#1@#updateClusters"(): void;
         /**
          * 클러스터를 모두 제거합니다.
          * @private
          */
-        _clearClusters(): void;
+        "__#1@#clearClusters"(): void;
         /**
          * 생성된 클러스터를 모두 제거하고, 다시 생성합니다.
          * @private
          */
-        _redraw(): void;
+        "__#1@#redraw"(): void;
         /**
          * 전달된 위/경도에서 가장 가까운 클러스터를 반환합니다. 없으면 새로 클러스터를 생성해 반환합니다.
          * @param position 위/경도
          * @return 클러스터
          */
-        _getClosestCluster(position: naver.maps.LatLng): Cluster;
+        "__#1@#getClosestCluster"(position: naver.maps.LatLng): Cluster;
         /**
          * 지도의 Idle 상태 이벤트 핸들러입니다.
          */
-        _onIdle(): void;
+        "__#1@#onIdle"(): void;
         /**
          * 각 마커의 드래그 종료 이벤트 핸들러입니다.
          */
-        _onDragEnd(): void;
+        "__#1@#onDragEnd"(): void;
         getContainerTopLeft(): naver.maps.Point;
         getMap(): naver.maps.Map | null;
         getPanes(): naver.maps.MapPanes;

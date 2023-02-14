@@ -1,13 +1,8 @@
 /// <reference types="navermaps" />
 import type { MarkerClusteringWrapper } from './MarkerClusteringWrapper';
 export declare class Cluster {
+    #private;
     $naver: typeof naver;
-    _clusterCenter: naver.maps.LatLng | null;
-    _clusterBounds: naver.maps.LatLngBounds | null;
-    _clusterMarker: naver.maps.Marker | null;
-    _relation: naver.maps.MapEventListener | null;
-    _clusterMember: Array<naver.maps.Marker>;
-    _markerClusterer: MarkerClusteringWrapper['markerClustering'];
     /**
      * 마커를 가지고 있는 클러스터를 정의합니다.
      * @param markerClusterer
@@ -75,42 +70,4 @@ export declare class Cluster {
      * 클러스터 마커 아이콘을 갱신합니다.
      */
     updateIcon(): void;
-    /**
-     * 클러스터를 구성하는 마커를 노출합니다. 이때에는 클러스터 마커를 노출하지 않습니다.
-     * @private
-     */
-    _showMember(): void;
-    /**
-     * 클러스터를 구성하는 마커를 노출하지 않습니다. 이때에는 클러스터 마커를 노출합니다.
-     * @private
-     */
-    _hideMember(): void;
-    /**
-     * 전달된 위/경도를 중심으로 그리드 크기만큼 확장한 클러스터 경계 영역을 반환합니다.
-     * @param position 위/경도
-     * @return 클러스터 경계 영역
-     * @private
-     */
-    _calcBounds(position: naver.maps.LatLng): naver.maps.LatLngBounds;
-    /**
-     * 클러스터를 구성하는 마커 수에 따라 노출할 아이콘을 결정하기 위한 인덱스를 반환합니다.
-     * @param count 클러스터를 구성하는 마커 수
-     * @return 인덱스
-     * @private
-     */
-    _getIndex(count: number): number;
-    /**
-     * 전달된 마커가 이미 클러스터에 속해 있는지 여부를 반환합니다.
-     * @param marker 마커
-     * @return 클러스터에 속해 있는지 여부
-     * @private
-     */
-    _isMember(marker: naver.maps.Marker): boolean;
-    /**
-     * 전달된 마커들의 중심 좌표를 반환합니다.
-     * @param markers 마커 배열
-     * @return 마커들의 중심 좌표
-     * @private
-     */
-    _calcAverageCenter(markers: Array<naver.maps.Marker>): naver.maps.Point;
 }
