@@ -21,7 +21,7 @@ type MarkerClusteringOptions = {
 };
 
 export class MarkerClusteringWrapper {
-  public markerClustering;
+  markerClustering;
 
   /**
    * 마커 클러스터링을 정의합니다.
@@ -30,15 +30,15 @@ export class MarkerClusteringWrapper {
    */
   constructor($naver: typeof naver, options: MarkerClusteringOptions) {
     class MarkerClustering extends $naver.maps.OverlayView {
-      public $naver: typeof naver;
+      $naver: typeof naver;
 
-      public DEFAULT_OPTIONS: MarkerClusteringOptions;
+      DEFAULT_OPTIONS: MarkerClusteringOptions;
 
-      private _clusters: Cluster[];
+      _clusters: Cluster[];
 
-      private _mapRelations: naver.maps.MapEventListener | null;
+      _mapRelations: naver.maps.MapEventListener | null;
 
-      private _markerRelations: Array<naver.maps.MapEventListener>;
+      _markerRelations: Array<naver.maps.MapEventListener>;
 
       /**
        * 마커 클러스터링을 정의합니다.
@@ -83,7 +83,7 @@ export class MarkerClusteringWrapper {
         this.setMap(opts.map || null);
       }
 
-      public onAdd(): void {
+      onAdd(): void {
         const map = this.getMap();
 
         this._mapRelations = this.$naver.maps.Event.addListener(map, 'idle', () => {
@@ -97,11 +97,11 @@ export class MarkerClusteringWrapper {
       }
 
       // eslint-disable-next-line class-methods-use-this
-      public draw(): void {
+      draw(): void {
         // noop
       }
 
-      public onRemove(): void {
+      onRemove(): void {
         this.$naver.maps.Event.removeListener(this._mapRelation);
 
         this._clearClusters();
@@ -115,14 +115,14 @@ export class MarkerClusteringWrapper {
        * @param newOptions 옵션 이름
        * @param arg 옵션 값
        */
-      public setOptions(newOptions: string, arg: unknown): void;
+      setOptions(newOptions: string, arg: unknown): void;
       /**
        * 마커 클러스터링 옵션을 설정합니다. 설정한 옵션만 반영됩니다.
        * @param newOptions 옵션
        * @param arg 최초 설정인지 여부
        */
-      public setOptions(newOptions: MarkerClusteringOptions, arg: boolean): void;
-      public setOptions(newOptions: string | MarkerClusteringOptions, arg: unknown): void {
+      setOptions(newOptions: MarkerClusteringOptions, arg: boolean): void;
+      setOptions(newOptions: string | MarkerClusteringOptions, arg: unknown): void {
         const _this: MarkerClustering = this;
 
         if (typeof newOptions === 'string') {
@@ -150,7 +150,7 @@ export class MarkerClusteringWrapper {
        * @param key 반환받을 옵션 이름
        * @return 옵션
        */
-      public getOptions(key: string): any {
+      getOptions(key: string): any {
         const _this: MarkerClustering = this;
         const options: MarkerClusteringOptions = {};
 
@@ -169,7 +169,7 @@ export class MarkerClusteringWrapper {
        * 클러스터를 구성하는 최소 마커 수를 반환합니다.
        * @return 클러스터를 구성하는 최소 마커 수
        */
-      public getMinClusterSize(): number {
+      getMinClusterSize(): number {
         return this.getOptions('minClusterSize');
       }
 
@@ -177,7 +177,7 @@ export class MarkerClusteringWrapper {
        * 클러스터를 구성하는 최소 마커 수를 설정합니다.
        * @param size 클러스터를 구성하는 최소 마커 수
        */
-      public setMinClusterSize(size: number): void {
+      setMinClusterSize(size: number): void {
         this.setOptions('minClusterSize', size);
       }
 
@@ -185,7 +185,7 @@ export class MarkerClusteringWrapper {
        * 클러스터 마커를 노출할 최대 줌 레벨을 반환합니다.
        * @return 클러스터 마커를 노출할 최대 줌 레벨
        */
-      public getMaxZoom(): number {
+      getMaxZoom(): number {
         return this.getOptions('maxZoom');
       }
 
@@ -193,7 +193,7 @@ export class MarkerClusteringWrapper {
        * 클러스터 마커를 노출할 최대 줌 레벨을 설정합니다.
        * @param zoom 클러스터 마커를 노출할 최대 줌 레벨
        */
-      public setMaxZoom(zoom: number): void {
+      setMaxZoom(zoom: number): void {
         this.setOptions('maxZoom', zoom);
       }
 
@@ -201,7 +201,7 @@ export class MarkerClusteringWrapper {
        * 클러스터를 구성할 그리드 크기를 반환합니다. 단위는 픽셀입니다.
        * @return 클러스터를 구성할 그리드 크기
        */
-      public getGridSize(): number {
+      getGridSize(): number {
         return this.getOptions('gridSize');
       }
 
@@ -209,7 +209,7 @@ export class MarkerClusteringWrapper {
        * 클러스터를 구성할 그리드 크기를 설정합니다. 단위는 픽셀입니다.
        * @param size 클러스터를 구성할 그리드 크기
        */
-      public setGridSize(size: number): void {
+      setGridSize(size: number): void {
         this.setOptions('gridSize', size);
       }
 
@@ -217,7 +217,7 @@ export class MarkerClusteringWrapper {
        * 클러스터 마커의 아이콘을 결정하는 인덱스 생성기를 반환합니다.
        * @return 인덱스 생성기
        */
-      public getIndexGenerator(): MarkerIndexGenerator {
+      getIndexGenerator(): MarkerIndexGenerator {
         return this.getOptions('indexGenerator');
       }
 
@@ -225,7 +225,7 @@ export class MarkerClusteringWrapper {
        * 클러스터 마커의 아이콘을 결정하는 인덱스 생성기를 설정합니다.
        * @param indexGenerator 인덱스 생성기
        */
-      public setIndexGenerator(indexGenerator: MarkerIndexGenerator): void {
+      setIndexGenerator(indexGenerator: MarkerIndexGenerator): void {
         this.setOptions('indexGenerator', indexGenerator);
       }
 
@@ -233,7 +233,7 @@ export class MarkerClusteringWrapper {
        * 클러스터로 구성할 마커를 반환합니다.
        * @return 클러스터로 구성할 마커
        */
-      public getMarkers(): Array<naver.maps.Marker> {
+      getMarkers(): Array<naver.maps.Marker> {
         return this.getOptions('markers');
       }
 
@@ -241,7 +241,7 @@ export class MarkerClusteringWrapper {
        * 클러스터로 구성할 마커를 설정합니다.
        * @param markers 클러스터로 구성할 마커
        */
-      public setMarkers(markers: Array<naver.maps.Marker>): void {
+      setMarkers(markers: Array<naver.maps.Marker>): void {
         this.setOptions('markers', markers);
       }
 
@@ -249,7 +249,7 @@ export class MarkerClusteringWrapper {
        * 클러스터 마커 아이콘을 반환합니다.
        * @return 클러스터 마커 아이콘
        */
-      public getIcons(): Array<naver.maps.ImageIcon | naver.maps.SymbolIcon | naver.maps.HtmlIcon> {
+      getIcons(): Array<naver.maps.ImageIcon | naver.maps.SymbolIcon | naver.maps.HtmlIcon> {
         return this.getOptions('icons');
       }
 
@@ -257,7 +257,7 @@ export class MarkerClusteringWrapper {
        * 클러스터 마커 아이콘을 설정합니다.
        * @param icons 클러스터 마커 아이콘
        */
-      public setIcons(
+      setIcons(
         icons: Array<naver.maps.ImageIcon | naver.maps.SymbolIcon | naver.maps.HtmlIcon>,
       ): void {
         this.setOptions('icons', icons);
@@ -267,7 +267,7 @@ export class MarkerClusteringWrapper {
        * 클러스터 마커의 엘리먼트를 조작할 수 있는 스타일링 함수를 반환합니다.
        * @return 콜백함수
        */
-      public getStylingFunction(): MarkerStylingFunction {
+      getStylingFunction(): MarkerStylingFunction {
         return this.getOptions('stylingFunction');
       }
 
@@ -275,7 +275,7 @@ export class MarkerClusteringWrapper {
        * 클러스터 마커의 엘리먼트를 조작할 수 있는 스타일링 함수를 설정합니다.
        * @param func 콜백함수
        */
-      public setStylingFunction(func: MarkerStylingFunction): void {
+      setStylingFunction(func: MarkerStylingFunction): void {
         this.setOptions('stylingFunction', func);
       }
 
@@ -283,7 +283,7 @@ export class MarkerClusteringWrapper {
        * 클러스터 마커를 클릭했을 때 줌 동작 수행 여부를 반환합니다.
        * @return 줌 동작 수행 여부
        */
-      public getDisableClickZoom(): boolean {
+      getDisableClickZoom(): boolean {
         return this.getOptions('disableClickZoom');
       }
 
@@ -291,7 +291,7 @@ export class MarkerClusteringWrapper {
        * 클러스터 마커를 클릭했을 때 줌 동작 수행 여부를 설정합니다.
        * @param flag 줌 동작 수행 여부
        */
-      public setDisableClickZoom(flag: boolean): void {
+      setDisableClickZoom(flag: boolean): void {
         this.setOptions('disableClickZoom', flag);
       }
 
@@ -299,7 +299,7 @@ export class MarkerClusteringWrapper {
        * 클러스터 마커의 위치를 클러스터를 구성하고 있는 마커의 평균 좌표로 할 것인지 여부를 반환합니다.
        * @return 평균 좌표로 클러스터링 여부
        */
-      public getAverageCenter(): boolean {
+      getAverageCenter(): boolean {
         return this.getOptions('averageCenter');
       }
 
@@ -307,12 +307,12 @@ export class MarkerClusteringWrapper {
        * 클러스터 마커의 위치를 클러스터를 구성하고 있는 마커의 평균 좌표로 할 것인지 여부를 설정합니다.
        * @param averageCenter 평균 좌표로 클러스터링 여부
        */
-      public setAverageCenter(averageCenter: boolean): void {
+      setAverageCenter(averageCenter: boolean): void {
         this.setOptions('averageCenter', averageCenter);
       }
 
       // KVO 이벤트 핸들러
-      public changed(key: string, value: unknown): void {
+      changed(key: string, value: unknown): void {
         if (!this.getMap()) return;
 
         switch (key) {
@@ -354,7 +354,7 @@ export class MarkerClusteringWrapper {
        * 현재 지도 경계 영역 내의 마커에 대해 클러스터를 생성합니다.
        * @private
        */
-      private _createClusters(): void {
+      _createClusters(): void {
         const map = this.getMap();
 
         if (!map) return;
@@ -384,7 +384,7 @@ export class MarkerClusteringWrapper {
        * 클러스터의 아이콘, 텍스트를 갱신합니다.
        * @private
        */
-      private _updateClusters(): void {
+      _updateClusters(): void {
         const clusters = this._clusters;
 
         for (let i = 0, ii = clusters.length; i < ii; i += 1) {
@@ -396,7 +396,7 @@ export class MarkerClusteringWrapper {
        * 클러스터를 모두 제거합니다.
        * @private
        */
-      private _clearClusters(): void {
+      _clearClusters(): void {
         const clusters = this._clusters;
 
         for (let i = 0, ii = clusters.length; i < ii; i += 1) {
@@ -413,7 +413,7 @@ export class MarkerClusteringWrapper {
        * 생성된 클러스터를 모두 제거하고, 다시 생성합니다.
        * @private
        */
-      private _redraw(): void {
+      _redraw(): void {
         this._clearClusters();
         this._createClusters();
         this._updateClusters();
@@ -424,7 +424,7 @@ export class MarkerClusteringWrapper {
        * @param position 위/경도
        * @return 클러스터
        */
-      private _getClosestCluster(position: naver.maps.LatLng): Cluster {
+      _getClosestCluster(position: naver.maps.LatLng): Cluster {
         const proj = this.getProjection();
         const clusters = this._clusters;
         let closestCluster: Cluster | null = null;
@@ -455,14 +455,14 @@ export class MarkerClusteringWrapper {
       /**
        * 지도의 Idle 상태 이벤트 핸들러입니다.
        */
-      private _onIdle(): void {
+      _onIdle(): void {
         this._redraw();
       }
 
       /**
        * 각 마커의 드래그 종료 이벤트 핸들러입니다.
        */
-      private _onDragEnd(): void {
+      _onDragEnd(): void {
         this._redraw();
       }
     }
