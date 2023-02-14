@@ -3,6 +3,8 @@
 
 import { Cluster } from './Cluster';
 
+type MarkerIndexGenerator = number[] | ((count: number) => number);
+
 type MarkerStylingFunction = (clusterMarker: naver.maps.Marker | null, count: number) => void;
 
 type MarkerClusteringOptions = {
@@ -13,7 +15,7 @@ type MarkerClusteringOptions = {
   maxZoom?: number;
   gridSize?: number;
   icons?: Array<naver.maps.ImageIcon | naver.maps.SymbolIcon | naver.maps.HtmlIcon>;
-  indexGenerator?: number[] | ((count: number) => number);
+  indexGenerator?: MarkerIndexGenerator;
   averageCenter?: boolean;
   stylingFunction?: MarkerStylingFunction;
 };
@@ -215,7 +217,7 @@ export class MarkerClusteringWrapper {
        * 클러스터 마커의 아이콘을 결정하는 인덱스 생성기를 반환합니다.
        * @return 인덱스 생성기
        */
-      public getIndexGenerator(): number[] | ((count: number) => number) {
+      public getIndexGenerator(): MarkerIndexGenerator {
         return this.getOptions('indexGenerator');
       }
 
@@ -223,7 +225,7 @@ export class MarkerClusteringWrapper {
        * 클러스터 마커의 아이콘을 결정하는 인덱스 생성기를 설정합니다.
        * @param indexGenerator 인덱스 생성기
        */
-      public setIndexGenerator(indexGenerator: number[] | ((count: number) => number)): void {
+      public setIndexGenerator(indexGenerator: MarkerIndexGenerator): void {
         this.setOptions('indexGenerator', indexGenerator);
       }
 
@@ -310,7 +312,7 @@ export class MarkerClusteringWrapper {
       }
 
       // KVO 이벤트 핸들러
-      public changed(key, value): void {
+      public changed(key: string, value: unknown): void {
         if (!this.getMap()) return;
 
         switch (key) {

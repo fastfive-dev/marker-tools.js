@@ -146,7 +146,7 @@ export class Cluster {
    */
   public updateCluster(): void {
     if (!this._clusterMarker) {
-      let position: unknown;
+      let position: naver.maps.Coord | naver.maps.CoordLiteral;
 
       if (this._markerClusterer.getAverageCenter()) {
         position = this._calcAverageCenter(this._clusterMember);
