@@ -34,11 +34,11 @@ export class MarkerClusteringWrapper {
 
       DEFAULT_OPTIONS: MarkerClusteringOptions;
 
-      _clusters: Cluster[];
+      #clusters: Cluster[];
 
-      _mapRelations: naver.maps.MapEventListener | null;
+      #mapRelations: naver.maps.MapEventListener | null;
 
-      _markerRelations: Array<naver.maps.MapEventListener>;
+      #markerRelations: Array<naver.maps.MapEventListener>;
 
       /**
        * 마커 클러스터링을 정의합니다.
@@ -74,10 +74,10 @@ export class MarkerClusteringWrapper {
           stylingFunction() {},
         };
 
-        this._clusters = [];
+        this.#clusters = [];
 
-        this._mapRelations = null;
-        this._markerRelations = [];
+        this.#mapRelations = null;
+        this.#markerRelations = [];
 
         this.setOptions({ ...this.DEFAULT_OPTIONS, ...opts }, true);
         this.setMap(opts.map || null);
@@ -86,13 +86,13 @@ export class MarkerClusteringWrapper {
       onAdd(): void {
         const map = this.getMap();
 
-        this._mapRelations = this.$naver.maps.Event.addListener(map, 'idle', () => {
-          this._onIdle();
+        this.#mapRelations = this.$naver.maps.Event.addListener(map, 'idle', () => {
+          this.#onIdle();
         });
 
         if (this.getMarkers().length > 0) {
-          this._createClusters();
-          this._updateClusters();
+          this.#createClusters();
+          this.#updateClusters();
         }
       }
 
@@ -104,7 +104,7 @@ export class MarkerClusteringWrapper {
       onRemove(): void {
         this.$naver.maps.Event.removeListener(this._mapRelation);
 
-        this._clearClusters();
+        this.#clearClusters();
 
         this._geoTree = null;
         this._mapRelation = null;
@@ -320,28 +320,28 @@ export class MarkerClusteringWrapper {
           case 'minClusterSize':
           case 'gridSize':
           case 'averageCenter':
-            this._redraw();
+            this.#redraw();
             break;
           case 'indexGenerator':
           case 'icons':
-            this._clusters.forEach((cluster) => {
+            this.#clusters.forEach((cluster) => {
               cluster.updateIcon();
             });
             break;
           case 'maxZoom':
-            this._clusters.forEach((cluster) => {
+            this.#clusters.forEach((cluster) => {
               if (cluster.getCount() > 1) {
                 cluster.checkByZoomAndMinClusterSize();
               }
             });
             break;
           case 'stylingFunction':
-            this._clusters.forEach((cluster) => {
+            this.#clusters.forEach((cluster) => {
               cluster.updateCount();
             });
             break;
           case 'disableClickZoom':
-            this._clusters.forEach((cluster) => {
+            this.#clusters.forEach((cluster) => {
               cluster[value ? 'disableClickZoom' : 'enableClickZoom']();
             });
             break;
@@ -354,7 +354,7 @@ export class MarkerClusteringWrapper {
        * 현재 지도 경계 영역 내의 마커에 대해 클러스터를 생성합니다.
        * @private
        */
-      _createClusters(): void {
+      #createClusters(): void {
         const map = this.getMap();
 
         if (!map) return;
@@ -367,13 +367,13 @@ export class MarkerClusteringWrapper {
           const position = marker.getPosition();
 
           if (bounds.hasLatLng(position)) {
-            const closestCluster = this._getClosestCluster(position);
+            const closestCluster = this.#getClosestCluster(position);
 
             closestCluster.addMarker(marker);
 
-            this._markerRelations.push(
+            this.#markerRelations.push(
               this.$naver.maps.Event.addListener(marker, 'dragend', () => {
-                this._onDragEnd();
+                this.#onDragEnd();
               }),
             );
           }
@@ -384,8 +384,8 @@ export class MarkerClusteringWrapper {
        * 클러스터의 아이콘, 텍스트를 갱신합니다.
        * @private
        */
-      _updateClusters(): void {
-        const clusters = this._clusters;
+      #updateClusters(): void {
+        const clusters = this.#clusters;
 
         for (let i = 0, ii = clusters.length; i < ii; i += 1) {
           clusters[i].updateCluster();
@@ -396,27 +396,27 @@ export class MarkerClusteringWrapper {
        * 클러스터를 모두 제거합니다.
        * @private
        */
-      _clearClusters(): void {
-        const clusters = this._clusters;
+      #clearClusters(): void {
+        const clusters = this.#clusters;
 
         for (let i = 0, ii = clusters.length; i < ii; i += 1) {
           clusters[i].destroy();
         }
 
-        this.$naver.maps.Event.removeListener(this._markerRelations);
+        this.$naver.maps.Event.removeListener(this.#markerRelations);
 
-        this._markerRelations = [];
-        this._clusters = [];
+        this.#markerRelations = [];
+        this.#clusters = [];
       }
 
       /**
        * 생성된 클러스터를 모두 제거하고, 다시 생성합니다.
        * @private
        */
-      _redraw(): void {
-        this._clearClusters();
-        this._createClusters();
-        this._updateClusters();
+      #redraw(): void {
+        this.#clearClusters();
+        this.#createClusters();
+        this.#updateClusters();
       }
 
       /**
@@ -424,9 +424,9 @@ export class MarkerClusteringWrapper {
        * @param position 위/경도
        * @return 클러스터
        */
-      _getClosestCluster(position: naver.maps.LatLng): Cluster {
+      #getClosestCluster(position: naver.maps.LatLng): Cluster {
         const proj = this.getProjection();
-        const clusters = this._clusters;
+        const clusters = this.#clusters;
         let closestCluster: Cluster | null = null;
         let distance = Infinity;
 
@@ -446,7 +446,7 @@ export class MarkerClusteringWrapper {
 
         if (!closestCluster) {
           closestCluster = new Cluster(this);
-          this._clusters.push(closestCluster);
+          this.#clusters.push(closestCluster);
         }
 
         return closestCluster;
@@ -455,15 +455,15 @@ export class MarkerClusteringWrapper {
       /**
        * 지도의 Idle 상태 이벤트 핸들러입니다.
        */
-      _onIdle(): void {
-        this._redraw();
+      #onIdle(): void {
+        this.#redraw();
       }
 
       /**
        * 각 마커의 드래그 종료 이벤트 핸들러입니다.
        */
-      _onDragEnd(): void {
-        this._redraw();
+      #onDragEnd(): void {
+        this.#redraw();
       }
     }
 

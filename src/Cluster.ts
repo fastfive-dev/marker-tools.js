@@ -6,17 +6,17 @@ import type { MarkerClusteringWrapper } from './MarkerClusteringWrapper';
 export class Cluster {
   $naver: typeof naver;
 
-  _clusterCenter: naver.maps.LatLng | null;
+  #clusterCenter: naver.maps.LatLng | null;
 
-  _clusterBounds: naver.maps.LatLngBounds | null;
+  #clusterBounds: naver.maps.LatLngBounds | null;
 
-  _clusterMarker: naver.maps.Marker | null;
+  #clusterMarker: naver.maps.Marker | null;
 
-  _relation: naver.maps.MapEventListener | null;
+  #relation: naver.maps.MapEventListener | null;
 
-  _clusterMember: Array<naver.maps.Marker>;
+  #clusterMember: Array<naver.maps.Marker>;
 
-  _markerClusterer: MarkerClusteringWrapper['markerClustering'];
+  #markerClusterer: MarkerClusteringWrapper['markerClustering'];
 
   /**
    * 마커를 가지고 있는 클러스터를 정의합니다.
@@ -25,14 +25,14 @@ export class Cluster {
   constructor(markerClusterer: MarkerClusteringWrapper['markerClustering']) {
     this.$naver = markerClusterer.$naver;
 
-    this._clusterCenter = null;
-    this._clusterBounds = null;
-    this._clusterMarker = null;
-    this._relation = null;
+    this.#clusterCenter = null;
+    this.#clusterBounds = null;
+    this.#clusterMarker = null;
+    this.#relation = null;
 
-    this._clusterMember = [];
+    this.#clusterMember = [];
 
-    this._markerClusterer = markerClusterer;
+    this.#markerClusterer = markerClusterer;
   }
 
   /**
@@ -40,38 +40,38 @@ export class Cluster {
    * @param marker 클러스터에 추가할 마커
    */
   addMarker(marker: naver.maps.Marker) {
-    if (this._isMember(marker)) return;
+    if (this.#isMember(marker)) return;
 
-    if (!this._clusterCenter) {
+    if (!this.#clusterCenter) {
       const position = marker.getPosition();
 
-      this._clusterCenter = position;
-      this._clusterBounds = this._calcBounds(position);
+      this.#clusterCenter = position;
+      this.#clusterBounds = this.#calcBounds(position);
     }
 
-    this._clusterMember.push(marker);
+    this.#clusterMember.push(marker);
   }
 
   /**
    * 클러스터를 제거합니다.
    */
   destroy() {
-    this.$naver.maps.Event.removeListener(this._relation);
+    this.$naver.maps.Event.removeListener(this.#relation);
 
-    const members = this._clusterMember;
+    const members = this.#clusterMember;
 
     for (let i = 0, ii = members.length; i < ii; i += 1) {
       members[i].setMap(null);
     }
 
-    this._clusterMarker.setMap(null);
+    this.#clusterMarker.setMap(null);
 
-    this._clusterMarker = null;
-    this._clusterCenter = null;
-    this._clusterBounds = null;
-    this._relation = null;
+    this.#clusterMarker = null;
+    this.#clusterCenter = null;
+    this.#clusterBounds = null;
+    this.#relation = null;
 
-    this._clusterMember = [];
+    this.#clusterMember = [];
   }
 
   /**
@@ -79,7 +79,7 @@ export class Cluster {
    * @return 클러스터 중심점
    */
   getCenter(): naver.maps.LatLng {
-    return this._clusterCenter;
+    return this.#clusterCenter;
   }
 
   /**
@@ -87,7 +87,7 @@ export class Cluster {
    * @return 클러스터 경계 영역
    */
   getBounds(): naver.maps.LatLngBounds {
-    return this._clusterBounds;
+    return this.#clusterBounds;
   }
 
   /**
@@ -95,7 +95,7 @@ export class Cluster {
    * @return 클러스터를 구성하는 마커 수
    */
   getCount(): number {
-    return this._clusterMember.length;
+    return this.#clusterMember.length;
   }
 
   /**
@@ -103,7 +103,7 @@ export class Cluster {
    * @return 클러스터를 구성하는 마커 객체 집합
    */
   getClusterMember(): Array<naver.maps.Marker> {
-    return this._clusterMember;
+    return this.#clusterMember;
   }
 
   /**
@@ -112,18 +112,18 @@ export class Cluster {
    * @return 클러스터 경계 영역 내의 위치 여부
    */
   isInBounds(latlng: naver.maps.LatLng): boolean {
-    return this._clusterBounds && this._clusterBounds.hasLatLng(latlng);
+    return this.#clusterBounds && this.#clusterBounds.hasLatLng(latlng);
   }
 
   /**
    * 클러스터 마커 클릭 시 줌 동작을 수행하도록 합니다.
    */
   enableClickZoom(): void {
-    if (this._relation) return;
+    if (this.#relation) return;
 
-    const map = this._markerClusterer.getMap();
+    const map = this.#markerClusterer.getMap();
 
-    this._relation = this.$naver.maps.Event.addListener(this._clusterMarker, 'click', (e) => {
+    this.#relation = this.$naver.maps.Event.addListener(this.#clusterMarker, 'click', (e) => {
       map.morph(e.coord, map.getZoom() + 1);
     });
   }
@@ -132,10 +132,10 @@ export class Cluster {
    * 클러스터 마커 클릭 시 줌 동작을 수행하지 않도록 합니다.
    */
   disableClickZoom(): void {
-    if (!this._relation) return;
+    if (!this.#relation) return;
 
-    this.$naver.maps.Event.removeListener(this._relation);
-    this._relation = null;
+    this.$naver.maps.Event.removeListener(this.#relation);
+    this.#relation = null;
   }
 
   /**
@@ -145,21 +145,21 @@ export class Cluster {
    * - 클러스터 마커 노출 여부
    */
   updateCluster(): void {
-    if (!this._clusterMarker) {
+    if (!this.#clusterMarker) {
       let position: naver.maps.Coord | naver.maps.CoordLiteral;
 
-      if (this._markerClusterer.getAverageCenter()) {
-        position = this._calcAverageCenter(this._clusterMember);
+      if (this.#markerClusterer.getAverageCenter()) {
+        position = this.#calcAverageCenter(this.#clusterMember);
       } else {
-        position = this._clusterCenter;
+        position = this.#clusterCenter;
       }
 
-      this._clusterMarker = new this.$naver.maps.Marker({
+      this.#clusterMarker = new this.$naver.maps.Marker({
         position,
-        map: this._markerClusterer.getMap(),
+        map: this.#markerClusterer.getMap(),
       });
 
-      if (!this._markerClusterer.getDisableClickZoom()) {
+      if (!this.#markerClusterer.getDisableClickZoom()) {
         this.enableClickZoom();
       }
     }
@@ -174,18 +174,18 @@ export class Cluster {
    * 조건에 따라 클러스터 마커를 노출하거나, 노출하지 않습니다.
    */
   checkByZoomAndMinClusterSize(): void {
-    const clusterer = this._markerClusterer;
+    const clusterer = this.#markerClusterer;
     const minClusterSize = clusterer.getMinClusterSize();
     const maxZoom = clusterer.getMaxZoom();
     const currentZoom = clusterer.getMap().getZoom();
 
     if (this.getCount() < minClusterSize) {
-      this._showMember();
+      this.#showMember();
     } else {
-      this._hideMember();
+      this.#hideMember();
 
       if (maxZoom <= currentZoom) {
-        this._showMember();
+        this.#showMember();
       }
     }
   }
@@ -194,10 +194,10 @@ export class Cluster {
    * 클러스터를 구성하는 마커 수를 갱신합니다.
    */
   updateCount(): void {
-    const stylingFunction = this._markerClusterer.getStylingFunction();
+    const stylingFunction = this.#markerClusterer.getStylingFunction();
 
     if (stylingFunction) {
-      stylingFunction(this._clusterMarker, this.getCount());
+      stylingFunction(this.#clusterMarker, this.getCount());
     }
   }
 
@@ -206,23 +206,23 @@ export class Cluster {
    */
   updateIcon(): void {
     const count = this.getCount();
-    let index = this._getIndex(count);
-    const icons = this._markerClusterer.getIcons();
+    let index = this.#getIndex(count);
+    const icons = this.#markerClusterer.getIcons();
 
     index = Math.max(index, 0);
     index = Math.min(index, icons.length - 1);
 
-    this._clusterMarker.setIcon(icons[index]);
+    this.#clusterMarker.setIcon(icons[index]);
   }
 
   /**
    * 클러스터를 구성하는 마커를 노출합니다. 이때에는 클러스터 마커를 노출하지 않습니다.
    * @private
    */
-  _showMember(): void {
-    const map = this._markerClusterer.getMap();
-    const marker = this._clusterMarker;
-    const members = this._clusterMember;
+  #showMember(): void {
+    const map = this.#markerClusterer.getMap();
+    const marker = this.#clusterMarker;
+    const members = this.#clusterMember;
 
     for (let i = 0, ii = members.length; i < ii; i += 1) {
       members[i].setMap(map);
@@ -237,10 +237,10 @@ export class Cluster {
    * 클러스터를 구성하는 마커를 노출하지 않습니다. 이때에는 클러스터 마커를 노출합니다.
    * @private
    */
-  _hideMember(): void {
-    const map = this._markerClusterer.getMap();
-    const marker = this._clusterMarker;
-    const members = this._clusterMember;
+  #hideMember(): void {
+    const map = this.#markerClusterer.getMap();
+    const marker = this.#clusterMarker;
+    const members = this.#clusterMember;
 
     for (let i = 0, ii = members.length; i < ii; i += 1) {
       members[i].setMap(null);
@@ -257,8 +257,8 @@ export class Cluster {
    * @return 클러스터 경계 영역
    * @private
    */
-  _calcBounds(position: naver.maps.LatLng): naver.maps.LatLngBounds {
-    const map = this._markerClusterer.getMap();
+  #calcBounds(position: naver.maps.LatLng): naver.maps.LatLngBounds {
+    const map = this.#markerClusterer.getMap();
     const bounds = new this.$naver.maps.LatLngBounds(position.clone(), position.clone());
     const mapBounds = map.getBounds();
     const proj = map.getProjection();
@@ -266,7 +266,7 @@ export class Cluster {
     const map_min_px = proj.fromCoordToOffset(mapBounds.getSW());
     const max_px = proj.fromCoordToOffset(bounds.getNE());
     const min_px = proj.fromCoordToOffset(bounds.getSW());
-    const gridSize = this._markerClusterer.getGridSize() / 2;
+    const gridSize = this.#markerClusterer.getGridSize() / 2;
 
     max_px.add(gridSize, -gridSize);
     min_px.add(-gridSize, gridSize);
@@ -287,8 +287,8 @@ export class Cluster {
    * @return 인덱스
    * @private
    */
-  _getIndex(count: number): number {
-    const indexGenerator = this._markerClusterer.getIndexGenerator();
+  #getIndex(count: number): number {
+    const indexGenerator = this.#markerClusterer.getIndexGenerator();
 
     if (Array.isArray(indexGenerator)) {
       let index = 0;
@@ -313,8 +313,8 @@ export class Cluster {
    * @return 클러스터에 속해 있는지 여부
    * @private
    */
-  _isMember(marker: naver.maps.Marker): boolean {
-    return this._clusterMember.indexOf(marker) !== -1;
+  #isMember(marker: naver.maps.Marker): boolean {
+    return this.#clusterMember.indexOf(marker) !== -1;
   }
 
   /**
@@ -324,7 +324,7 @@ export class Cluster {
    * @private
    */
   // eslint-disable-next-line class-methods-use-this
-  _calcAverageCenter(markers: Array<naver.maps.Marker>): naver.maps.Point {
+  #calcAverageCenter(markers: Array<naver.maps.Marker>): naver.maps.Point {
     const numberOfMarkers = markers.length;
     const averageCenter: [number, number] = [0, 0];
 
