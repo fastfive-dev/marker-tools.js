@@ -1,4 +1,3 @@
-// @ts-nocheck
 /* eslint-disable max-classes-per-file, no-underscore-dangle, @typescript-eslint/naming-convention */
 
 import { Cluster } from './Cluster';
@@ -36,7 +35,7 @@ export class MarkerClusteringWrapper {
 
       #clusters: Cluster[];
 
-      #mapRelations: naver.maps.MapEventListener | null;
+      #mapRelation: naver.maps.MapEventListener | null;
 
       #markerRelations: Array<naver.maps.MapEventListener>;
 
@@ -76,7 +75,7 @@ export class MarkerClusteringWrapper {
 
         this.#clusters = [];
 
-        this.#mapRelations = null;
+        this.#mapRelation = null;
         this.#markerRelations = [];
 
         this.setOptions({ ...this.DEFAULT_OPTIONS, ...opts }, true);
@@ -86,7 +85,7 @@ export class MarkerClusteringWrapper {
       onAdd(): void {
         const map = this.getMap();
 
-        this.#mapRelations = this.$naver.maps.Event.addListener(map, 'idle', () => {
+        this.#mapRelation = this.$naver.maps.Event.addListener(map, 'idle', () => {
           this.#onIdle();
         });
 
@@ -102,12 +101,13 @@ export class MarkerClusteringWrapper {
       }
 
       onRemove(): void {
-        this.$naver.maps.Event.removeListener(this._mapRelation);
+        if (this.#mapRelation) {
+          this.$naver.maps.Event.removeListener(this.#mapRelation);
+        }
 
         this.#clearClusters();
 
-        this._geoTree = null;
-        this._mapRelation = null;
+        this.#mapRelation = null;
       }
 
       /**
@@ -159,7 +159,7 @@ export class MarkerClusteringWrapper {
         }
 
         Object.entries(_this.DEFAULT_OPTIONS).forEach(([k, v]) => {
-          options[k] = _this.get(k);
+          options[k as keyof MarkerClusteringOptions] = _this.get(k);
         });
 
         return options;
@@ -366,7 +366,7 @@ export class MarkerClusteringWrapper {
           const marker = markers[i];
           const position = marker.getPosition();
 
-          if (bounds.hasLatLng(position)) {
+          if ('hasLatLng' in bounds && 'toPoint' in position && bounds.hasLatLng(position)) {
             const closestCluster = this.#getClosestCluster(position);
 
             closestCluster.addMarker(marker);
